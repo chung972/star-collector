@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Star List</h1>
+
+{% for star in stars %}
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">{{ star.name }}</span>
+            <p>Spectral Type: {{ star.type_of_star }}</p>
+            <p>Distance from Earth: {{ star.distance }} lightyears</p>
+            {% if star.mass > 1 %}
+                <p>Mass: {{ star.mass }} M (solar mass)</p>
+            {% else %}
+                <p>Mass: Lighter than the Sun</p>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock %}

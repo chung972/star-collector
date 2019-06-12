@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Star
+from django.views.generic import ListView, DetailView
+from .models import Star, Observatory
 from .forms import ViewingForm
 
 
@@ -50,3 +51,26 @@ def add_viewing(request, star_id):
         new_viewing.star_id = star_id
         new_viewing.save()
     return redirect('detail', star_id=star_id)
+
+
+class ObservatoryList(ListView):
+    model = Observatory
+
+
+class ObservatoryDetail(DetailView):
+    model = Observatory
+
+
+class ObservatoryCreate(CreateView):
+    model = Observatory
+    fields = '__all__'
+
+
+class ObservatoryUpdate(UpdateView):
+    model = Observatory
+    fields = ['name', 'location']
+
+
+class ObservatoryDelete(DeleteView):
+    model = Observatory
+    success_url = '/observatories/'

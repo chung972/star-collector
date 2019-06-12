@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from datetime import date
 
 # Create your models here.
 VISIBILITY = (
@@ -20,6 +21,17 @@ class Star(models.Model):
 
     def get_absolute_url(self):
         return reverse('detail', kwargs={'star_id': self.id})
+
+
+class Observatory(models.Model):
+    name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('observatories_detail', kwargs={'pk': self.id})
 
 
 class Viewing(models.Model):

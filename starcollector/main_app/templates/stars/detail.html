@@ -20,7 +20,19 @@
                 <a href="{% url 'stars_delete' star.id %}">Delete</a>
             </div>
         </div>
+        {% for photo in star.photo_set.all %}
+        <img class="responsive-img card-panel" src="{{photo.url}}">
+        {% empty %}
+        <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+        {% endfor %}
+        <form action="{% url 'add_photo' star.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
+            {% csrf_token %}
+            <input type="file" name="photo-file">
+            <br><br>
+            <input type="submit" class="btn" value="Upload Photo">
+        </form>
     </div>
+
     <div class="col s6">
         <form action="{% url 'add_viewing' star.id %}" method="POST">
             {% csrf_token %}
@@ -47,7 +59,54 @@
         </table>
     </div>
 </div>
-
+<hr>
+<div class="row">
+    <div class="col s6">
+        <h3>{{ star.name }} can be viewed from:</h3>
+        {% if star.observatories.count %}
+        {% for observatory in star.observatories.all %}
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">
+                    {{ observatory.name }} at {{observatory.location}}
+                </span>
+            </div>
+            <div class="card-action">
+                <form action="{% url 'unassoc_observatory' star.id observatory.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Remove</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h5>No observatories selected</h5>
+        {% endif %}
+    </div>
+    <!-- Available toys will come after this line -->
+    <div class="col s6">
+        <h3>Available Observatories</h3>
+        {% if observatories.count %}
+        {% for observatory in observatories.all %}
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">
+                    {{ observatory.name }} at {{ observatory.location }}
+                </span>
+            </div>
+            <div class="card-action">
+                <form action="{% url 'assoc_observatory' star.id observatory.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Add</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h5>{{star.observatory}} Viewable from all available observatories</h5>
+        {% endif %}
+    </div>
+</div>
 <script>
     var dateEl = document.getElementById('id_date');
     M.Datepicker.init(dateEl, {
